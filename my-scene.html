@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>星球宇宙</title>
+  <script src="libs/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene>
+    <!-- 深空环境 -->
+    <a-sky color="#000011"></a-sky>
+    <a-entity id="stars" geometry="primitive: BufferGeometry" material="shader: points; color: #ffffff; size: 0.15">
+    </a-entity>
+
+    <!-- 太阳：发光球体 + 点光源 -->
+    <a-sphere position="0 0 -8" radius="1.5" color="#ffaa33"
+              animation="property: scale; to: 1.05 1.05 1.05; dir: alternate; dur: 2000; loop: true">
+    </a-sphere>
+    <a-light type="point" position="0 0 -8" color="#ffaa33" intensity="1.5" distance="30"></a-light>
+    <a-light type="ambient" color="#222244" intensity="0.5"></a-light>
+
+    <!-- 行星1：类地行星（球体），绕太阳公转 -->
+    <a-entity animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear"
+              position="0 0 -8">
+      <a-sphere position="4 0 0" radius="0.5" color="#4fc3f7"
+                animation="property: rotation; to: 0 360 0; dur: 3000; loop: true; easing: linear">
+      </a-sphere>
+    </a-entity>
+
+    <!-- 行星2：类土星（球体 + 环），绕太阳公转 -->
+    <a-entity animation="property: rotation; to: 0 360 0; dur: 12000; loop: true; easing: linear"
+              position="0 0 -8">
+      <a-sphere position="7 0 0" radius="0.7" color="#ffb74d"></a-sphere>
+      <a-torus position="7 0 0" radius="1.1" radius-tubular="0.12" color="#ffcc80"
+               rotation="-70 0 0"></a-torus>
+    </a-entity>
+
+    <!-- 行星3：小行星（方盒），绕太阳公转 + 自转 -->
+    <a-entity animation="property: rotation; to: 0 360 0; dur: 16000; loop: true; easing: linear"
+              position="0 0 -8">
+      <a-box position="10 0 0" width="0.5" height="0.5" depth="0.5" color="#ef5350"
+             animation="property: rotation; to: 360 360 360; dur: 3000; loop: true; easing: linear">
+      </a-box>
+    </a-entity>
+
+    <!-- 相机初始位：俯瞰太阳系 -->
+    <a-camera position="0 6 4"></a-camera>
+  </a-scene>
+</body>
+</html>
