@@ -38,10 +38,53 @@ const sun = new THREE.Mesh(
 );
 scene.add(sun);
 
-// 动画：太阳自转 + 星空缓转
+// 行星组：3颗不同行星绕太阳公转
+const planets = new THREE.Group();
+
+// 行星1：类地行星（球体 + 蓝色材质）
+const planet1 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5, 32, 32),
+  new THREE.MeshStandardMaterial({ color: 0x4fc3f7 })
+);
+planet1.userData = { orbitRadius: 4, orbitSpeed: 0.02, orbitAngle: 0 };
+planets.add(planet1);
+
+// 行星2：类土星（球体 + 环 — TorusGeometry，不同几何体类型）
+const planet2Group = new THREE.Group();
+const planet2 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.7, 32, 32),
+  new THREE.MeshStandardMaterial({ color: 0xffb74d })
+);
+const ring = new THREE.Mesh(
+  new THREE.TorusGeometry(1.1, 0.12, 16, 64),
+  new THREE.MeshStandardMaterial({ color: 0xffcc80, side: THREE.DoubleSide })
+);
+ring.rotation.x = Math.PI / 2.5;
+planet2Group.add(planet2, ring);
+planet2Group.userData = { orbitRadius: 7, orbitSpeed: 0.012, orbitAngle: Math.PI / 2 };
+planets.add(planet2Group);
+
+// 行星3：小行星（二十面体 — 第三种几何体，flatShading粗糙感）
+const planet3 = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(0.35, 0),
+  new THREE.MeshStandardMaterial({ color: 0xef5350, flatShading: true })
+);
+planet3.userData = { orbitRadius: 10, orbitSpeed: 0.008, orbitAngle: Math.PI };
+planets.add(planet3);
+
+scene.add(planets);
+
+// 动画：太阳自转 + 行星公转自转 + 星空缓转
 const animate = () => {
   requestAnimationFrame(animate);
   sun.rotation.y += 0.003;
+  planets.children.forEach(p => {
+    const d = p.userData;
+    d.orbitAngle += d.orbitSpeed;
+    p.position.x = Math.cos(d.orbitAngle) * d.orbitRadius;
+    p.position.z = Math.sin(d.orbitAngle) * d.orbitRadius;
+    p.rotation.y += 0.01;
+  });
   stars.rotation.y += 0.0002;
   renderer.render(scene, camera);
 };
